@@ -7,7 +7,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import useSignup from "../../hooks/useSignup";
 import mailImg from "../../images/bonbon-fast-email-sending-2.png"
 import { toast } from "react-toastify";
-import { AuthInput } from "../../modules/Auth/AuthInput";
+import { AuthInput } from "../../modules/Auth/AuthInput.jsx";
 import { useUserProvider } from "../../contexts/UserContext";
 import CustomLoader from "../../components/CustomLoader";
 import useLogin from "../../hooks/useLogin";
@@ -40,15 +40,15 @@ export default function SignUp(){
         e.preventDefault()
         console.log(signupData)
         let namesArr = signupData.fullname.split(" ")
-        if(namesArr.length < 2){
-            toast.error("Enter Full Name Seperated by Space")
+        if(namesArr.length < 2 && signupData.usertype == "organiser"){
+            toast.error("Enter First and Last Name Seperated by Space")
             return
         }
         let formatedData = {
             ...signupData,
             fullname: undefined,
-            firstname: namesArr[0],
-            lastname: namesArr[1],
+            firstname: signupData.usertype == "organiser" ? namesArr[0] : undefined,
+            lastname: signupData.usertype === "organiser" ? namesArr[1] : undefined,
         }
         signup(formatedData)
         if(signupStatus.success){
@@ -80,7 +80,7 @@ export default function SignUp(){
     },[signupStatus.error, signupStatus.message])
 
     return(
-        <div className="md:w-[60%]">
+        <div className="w-full h-full bg-white md:px-6 content-start md:content-center rounded-t-xl md:rounded-tr-none">
             {
                 currentStage == 2
                 &&
@@ -96,13 +96,13 @@ export default function SignUp(){
                 &&
                 currentStage === 1
                 &&
-                <div className="h-auto bg-white p-5 my-10 rounded-2xl">
-                    <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome to Emume</h1>
+                <div className="h-auto p-5 my-10 rounded-2xl">
+                    <h1 className="text-[30px] md:text-[60px] text-center leading-[100%] text-primary-dark my-2">Welcome to Emume</h1>
                     <hr></hr>
                     <p className="py-3 text-center text-[#CCCCCC] ">Set up your user account</p>
                     {signupStatus.error && <div className="text-red-500 text-center font-medium">{signupStatus.message}</div>}
                     <form className="" onSubmit={submitSignupForm}>
-                        <div className="md:flex gap-4 justify-between">
+                        {/* <div className="md:flex gap-4 justify-between">
                             <AuthInput 
                                 label={"Full Name*"}
                                 type={"text"}
@@ -113,17 +113,6 @@ export default function SignUp(){
                                 onChange={handleFormDataChange}
                             />
                             <AuthInput 
-                                label={"Username*"}
-                                type={"text"}
-                                required={true}
-                                placeholder={"Username"}
-                                name={"username"}
-                                value={signupData.username}
-                                onChange={handleFormDataChange}
-                            />
-                        </div>
-                        <div className="md:flex gap-4 justify-between">
-                            <AuthInput 
                                 label={"Location*"}
                                 type={"select"}
                                 name={"location"}
@@ -132,8 +121,19 @@ export default function SignUp(){
                                 value={signupData.location}
                                 onChange={handleFormDataChange}
                             />
+                        </div> */}
+                        <div className="gap-4 justify-between">
                             <AuthInput 
-                                label={"Email*"}
+                                //label={"Username*"}
+                                type={"text"}
+                                required={true}
+                                placeholder={"Username"}
+                                name={"username"}
+                                value={signupData.username}
+                                onChange={handleFormDataChange}
+                            />
+                            <AuthInput 
+                                //label={"Email*"}
                                 inputtype={"email"}
                                 required={true}
                                 placeholder={"Email"}
@@ -142,24 +142,24 @@ export default function SignUp(){
                                 onChange={handleFormDataChange}
                             />
                         </div>
-                        <div className="md:flex gap-4 justify-between">
+                        <div className="gap-4 justify-between">
                             <AuthInput 
-                                label={"Password*"}
+                                //label={"Password*"}
                                 inputtype={passType}
                                 type={"password"}
                                 required={true}
-                                placeholder={"*******"}
+                                placeholder={"Password"}
                                 name={"password"}
                                 value={signupData.password}
                                 togglePass={togglePass}
                                 onChange={handleFormDataChange}
                             />
                             <AuthInput 
-                                label={"Confirm Password*"}
+                                //label={"Confirm Password*"}
                                 inputtype={passType}
                                 type={"password"}
                                 required={true}
-                                placeholder={"*******"}
+                                placeholder={"Confirm Password"}
                                 name={"confirm_password"}
                                 value={signupData.confirm_password}
                                 onChange={handleFormDataChange}
@@ -172,7 +172,7 @@ export default function SignUp(){
                         </div>
                         <button 
                             disabled={signupLoading} 
-                            className={`w-full p-2 ${signupLoading ? "bg-transparent text-primary-dark" : "bg-primary-dark text-white hover:bg-primary-orange"} rounded-2xl font-bold border-xl transition-all ease-in-out duration-300 cursor-pointer `}
+                            className={`w-full p-2 ${signupLoading ? "bg-transparent text-primary-dark" : "bg-primary-dark text-primary-orange"} rounded-2xl border-xl transition-all ease-in-out duration-300 cursor-pointer `}
                         >
                             {signupLoading
                             ?
@@ -190,18 +190,18 @@ export default function SignUp(){
             {
                 signupData.usertype === "organiser"
                 &&
-                currentStage === 2
+                currentStage === 1
                 &&
                 <div className="h-auto bg-white p-5 my-10 rounded-2xl">
-                <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome to Emume</h1>
+                <h1 className="text-[30px] md:text-[40px] lg:text-[60px] text-center leading-[100%] text-primary-dark my-4">Welcome to Emume</h1>
                 <hr></hr>
                 <p className="py-3 text-center text-[#CCCCCC] ">Set up your organiser account</p>
                 {signupStatus.error && <div className="text-red-500 text-center font-medium">{signupStatus.message}</div>}
                 <form className="" onSubmit={submitSignupForm}>
-                    <div className="md:flex gap-4 justify-between">
+                    <div className="gap-4 justify-between">
                         <AuthInput 
-                            label={"Full Name*"}
-                            placeholder={"FirstName LastName"}
+                            //label={"Full Name*"}
+                            placeholder={"Full Name"}
                             required
                             type={"text"}
                             name={"fullname"}
@@ -209,7 +209,7 @@ export default function SignUp(){
                             onChange={handleFormDataChange}
                         />
                         <AuthInput 
-                            label={"Brand Name*"}
+                            //label={"Brand Name*"}
                             type={"text"}
                             required
                             placeholder={"Brand Name"}
@@ -218,9 +218,9 @@ export default function SignUp(){
                             onChange={handleFormDataChange}
                         />
                     </div>
-                    <div className="md:flex gap-4 justify-between">
+                    <div className="gap-4 justify-between">
                         <AuthInput 
-                            label={"Location*"}
+                            //label={"Location*"}
                             type={"select"}
                             options={[{label: "Nigeria", value: "Nigeria"}]}
                             required
@@ -229,7 +229,7 @@ export default function SignUp(){
                             onChange={handleFormDataChange}
                         />
                         <AuthInput 
-                            label={"Email*"}
+                            //label={"Email*"}
                             type={"email"}
                             required
                             placeholder={"Email"}
@@ -238,9 +238,9 @@ export default function SignUp(){
                             onChange={handleFormDataChange}
                         />
                     </div>
-                    <div className="md:flex gap-4 justify-between">
+                    <div className="gap-4 justify-between">
                         <AuthInput 
-                            label={"Password*"}
+                            //label={"Password*"}
                             type={passType}
                             inputtype={"password"}
                             required
@@ -251,7 +251,7 @@ export default function SignUp(){
                             onChange={handleFormDataChange}
                         />
                         <AuthInput 
-                            label={"Confirm Password*"}
+                            //label={"Confirm Password*"}
                             type={passType}
                             inputtype={"password"}
                             placeholder={"*******"}
@@ -265,7 +265,7 @@ export default function SignUp(){
                         <input type="checkbox" required name="tac" checked={signupData.tac} onChange={handleFormDataChange} />
                         <label>I have read and understood the <a href="/" className="text-primary-orange font-medium">Terms and Conditions</a> of emume</label>
                     </div>
-                    <button disabled={signupLoading} className={`w-full p-2 ${signupLoading ? "bg-transparent text-primary-dark" : "bg-primary-dark text-white hover:bg-primary-orange"} rounded-2xl font-bold border-xl transition-all ease-in-out duration-300 cursor-pointer `}>
+                    <button disabled={signupLoading} className={`w-full p-2 ${signupLoading ? "bg-transparent text-primary-dark" : "bg-primary-dark text-primary-orange"} rounded-2xl border-xl transition-all ease-in-out duration-300 cursor-pointer `}>
                         {signupLoading
                             ?
                             <CustomLoader size={20} />

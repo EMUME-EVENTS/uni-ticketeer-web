@@ -1,6 +1,6 @@
 import { useState } from "react"
 import useLogin from "../../hooks/useLogin"
-import { AuthInput } from "../../modules/Auth/AuthInput"
+import { AuthInput } from "../../modules/Auth/AuthInput.jsx"
 import { useSearchParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import CustomLoader from "../../components/CustomLoader"
@@ -27,14 +27,14 @@ export default function ResetPassword(){
         await resetPassword(userid, token, {new_password: password})
     }
     return(
-        <div className="md:w-[50%] h-auto bg-white p-5 rounded-2xl">
-            <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Password Reset</h1>
+        <div className="h-full content-start md:content-center bg-white p-5 rounded-2xl">
+            <h1 className="text-[30px] md:text-[40px] lg:text-[60px] text-center leading-[100%] text-primary-dark my-2">Password Reset</h1>
             <hr></hr>
             <p className="py-3 text-sm text-center text-[#CCCCCC] ">Enter and confirm password to reset</p>
             {status.error && <div className="text-red-500 text-md text-center font-medium">{status.message}</div>}
             <form className="" onSubmit={submitResetPassword}>
                 <AuthInput 
-                    label={"Password"}
+                    //label={"Password"}
                     placeholder={"*******"}
                     required={true}
                     inputtype={"password"}
@@ -45,7 +45,7 @@ export default function ResetPassword(){
                     }}
                 />
                 <AuthInput 
-                    label={"Confirm Password"}
+                    //label={"Confirm Password"}
                     placeholder={"*******"}
                     required={true}
                     inputtype={"password"}
@@ -57,7 +57,7 @@ export default function ResetPassword(){
                 />
                 <button 
                     disabled={loginLoading} 
-                    className={`w-full mt-4 p-2 ${loginLoading ? "bg-[#EEE] text-[#555]" : "bg-primary-dark text-white"} rounded-2xl  font-bold border-xl`}
+                    className={`w-full mt-4 p-2 ${loginLoading ? "bg-[#EEE] text-[#555]" : "bg-primary-dark text-primary-orange"} rounded-2xl border-xl`}
                 >
                     {
                         loginLoading

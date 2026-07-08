@@ -1,6 +1,6 @@
 import { useState } from "react"
 import useLogin from "../../hooks/useLogin"
-import {AuthInput} from "../../modules/Auth/AuthInput"
+import {AuthInput} from "../../modules/Auth/AuthInput.jsx"
 import CustomLoader from "../../components/CustomLoader"
 
 export default function ForgotPassword(){
@@ -14,14 +14,14 @@ export default function ForgotPassword(){
     
     
     return(
-        <div className="md:w-[50%] h-auto bg-white p-5 rounded-2xl">
-            <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Password Reset</h1>
+        <div className="h-full content-start md:content-center bg-white p-5 rounded-2xl">
+            <h1 className="text-[30px] lg:text-[60px] text-center leading-[100%] text-primary-dark my-2">Password Reset</h1>
             <hr></hr>
             <p className="py-3 text-sm text-center text-[#CCCCCC] ">A link to reset your password would be sent to your mail</p>
             {status.error && <div className="text-red-500 text-md text-center font-medium">{status.message}</div>}
             <form className="" onSubmit={submitResetPassword}>
                 <AuthInput 
-                    label={"Enter Email"}
+                    //label={"Enter Email"}
                     placeholder={"Email"}
                     required={true}
                     inputtype={"email"}
@@ -32,7 +32,7 @@ export default function ForgotPassword(){
                 />
                 <button 
                     disabled={loginLoading} 
-                    className={`w-full mt-4 p-2 ${loginLoading ? "bg-[#EEE] text-[#555]" : "bg-primary-dark text-white"} rounded-2xl  font-bold border-xl`}
+                    className={`w-full mt-4 p-2 ${loginLoading ? "bg-[#EEE] text-[#555]" : "bg-primary-dark text-primary-orange"} rounded-2xl border-xl`}
                 >
                     {
                         loginLoading

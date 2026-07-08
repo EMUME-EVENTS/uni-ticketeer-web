@@ -46,7 +46,7 @@ export default function Header(){
                                 </Link>
                             </div>
                             <div className="w-full text-center md:w-auto bg-primary-dark uppercase text-primary-orange px-4 py-2 rounded-full">
-                                <Link to={'/auth/signup'}>
+                                <Link to={'/getstarted'}>
                                     Sign Up
                                 </Link>
                             </div>

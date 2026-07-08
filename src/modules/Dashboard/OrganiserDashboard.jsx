@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import OverviewCard from "../../components/OverviewCard";
 import DashEventCard from "../../components/DashEventCard";
-import { IoAdd, IoClose } from "react-icons/io5";
+import { IoAdd, IoClose, IoTicketOutline } from "react-icons/io5";
 import { useEffect, useState, useContext } from "react";
 import useEvents from "../../hooks/useEvents";
 import useTickets from "../../hooks/useTickets";
@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { UserContext, useUserProvider } from "../../contexts/UserContext";
 import { checkMissingTickets, isEventPast } from "../../global/helpers";
 import CustomModal from "../../components/CustomModal";
+import NewOverviewCard from "../../components/NewOverviewCard";
+import { CiDollar } from "react-icons/ci";
 
 export default function OrganiserDashboard(){
     let navigate = useNavigate()
@@ -67,19 +69,35 @@ export default function OrganiserDashboard(){
     return(
         <div className="w-[100%]">
                     <h2 className="text-xl py-8 font-bold text-primary-dark">Overview</h2>
-                    <div className="md:grid grid-cols-3 gap-5">
-                        <OverviewCard title={"ongoing events"} amount={organiserStats?.ongoingEvents || 0} />          
-                        <OverviewCard title={"ongoing ticket sales"} amount={organiserStats?.ongoingTicketSales || 0} />
+                    <div className="flex flex-col md:grid grid-cols-2 gap-5 bg-white p-4 rounded-[20px]">
+                        <NewOverviewCard 
+                            title={"Total Revenue"} 
+                            isCurrencyCard
+                            amount={organiserStats?.allTimeSales.toLocaleString() || 0} 
+                            description={"all time"}
+                            icon={<CiDollar size={35} />}
+                        />          
+                        <NewOverviewCard 
+                            title={"Tickets sold"} 
+                            amount={organiserStats?.ongoingTicketSales || 0} 
+                            description={"upcoming"}
+                            icon={<IoTicketOutline size={30} />}
+                        />
                         <OverviewCard title={"active tickets"} amount={organiserStats?.activeTickets || 0} />
                         {viewMore && <OverviewCard title={"all time events"} amount={organiserStats?.allTimeEvents || 0} />}
                         {viewMore && <OverviewCard title={"all time ticket sales"} amount={organiserStats?.allTimeTicketSales || 0} />}
                         {viewMore && <OverviewCard title={"all time sales"} isCurrencyCard={true} amount={organiserStats?.allTimeSales.toLocaleString() || 0} />}          
                     </div>
+                    <div className="flex gap-3">
+                        <div className="text-primary-orange bg-primary-dark px-4 py-2 rounded-full text-center">
+                            Create New Event
+                        </div>
+                    </div>
                     <div className="flex justify-end text-primary-dark font-medium pt-4 underline text-right">
                         <div 
                             onClick={()=>{
                                 setViewMore((prev)=>(!prev))
-                            }} 
+                            }}
                             className="cursor-pointer"
                         >
                             {
