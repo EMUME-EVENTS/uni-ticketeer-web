@@ -7,7 +7,7 @@ import { formatTime } from "../global/helpers"
 export default function DashEventCard({link, event}){
     return(
         <div className="group md:w-[23%] bg-white rounded-xl border-2 border-white relative">
-            <img src={event.banner_image_url} className="w-full rounded-xl" alt="" />
+            <img src={event.banner_image_url} className="w-full h-full rounded-xl" alt="" />
             <div className="hidden text-primary-dark group-hover:block w-full bg-white rounded-xl px-2 absolute bottom-0">
                 <h3 className="text-primary-dark font-bold">{event.title}</h3>
                 <p className="text-[10px] font-bold">{event.additional_information}</p>

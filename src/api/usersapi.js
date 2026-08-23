@@ -66,6 +66,7 @@ export async function getUserAccountDetailsApi(accessToken){
 
 export async function addUserAccountDetailsApi(accessToken, body){
     try{
+        console.log("bank details", body)
         let result = await axios.post(`${baseApiUrlTest}${apiVersion}/users/accountdetails`, body, {
             headers: {
                 "Accept": "application/json",
@@ -76,6 +77,7 @@ export async function addUserAccountDetailsApi(accessToken, body){
         console.log("post bank details", result)
         return { err: false, result }
     }catch(err){
+        console.log("error post bank details", err)
         return { err: true, error: err}
     }
 }

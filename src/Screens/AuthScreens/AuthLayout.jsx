@@ -26,7 +26,7 @@ export default function AuthLayout(){
                     <h1 className="text-4xl text-white font-bold">Emume</h1>
                     <p className="text-primary-orange text-xl">{location.pathname === "/auth/login" ? "Login" : location.pathname === "/auth/signup" ? "Sign up" : ""}</p>
                 </div>
-                <div className="absolute rounded-t-xl md:rounded-tr-none w-full md:relative bottom-0 md:w-[40%] h-[80vh] md:min-h-[100vh] ml-auto bg-[#EEE] items-center justify-center overflow-scroll">
+                <div className="absolute rounded-t-xl md:rounded-tr-none w-full md:relative bottom-0 md:w-[40%] h-[75vh] md:min-h-[100vh] ml-auto bg-[#EEE] items-center justify-center overflow-scroll">
                     <Outlet />
                 </div>
                 <ToastContainer />

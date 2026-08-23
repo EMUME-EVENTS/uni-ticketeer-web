@@ -11,6 +11,25 @@ import { checkMissingTickets, isEventPast } from "../../global/helpers";
 import CustomModal from "../../components/CustomModal";
 import NewOverviewCard from "../../components/NewOverviewCard";
 import { CiDollar } from "react-icons/ci";
+import { RiCalendarCheckLine } from "react-icons/ri";
+import { BsCalendar2Check } from "react-icons/bs";
+
+let actionArray = [
+    {
+        text: "Create New Event",
+        link: "/dashboard/event/create",
+        bgDark: true
+    },
+    {
+        text: "View Payout"
+    },
+    {
+        text: "Export Report"
+    },
+    {
+        text: "Message Attendees"
+    }
+]
 
 export default function OrganiserDashboard(){
     let navigate = useNavigate()
@@ -68,32 +87,46 @@ export default function OrganiserDashboard(){
 
     return(
         <div className="w-[100%]">
-                    <h2 className="text-xl py-8 font-bold text-primary-dark">Overview</h2>
+                    <h2 className="text-xl py-2 font-bold text-primary-dark">Overview</h2>
                     <div className="flex flex-col md:grid grid-cols-2 gap-5 bg-white p-4 rounded-[20px]">
                         <NewOverviewCard 
                             title={"Total Revenue"} 
                             isCurrencyCard
                             amount={organiserStats?.allTimeSales.toLocaleString() || 0} 
                             description={"all time"}
-                            icon={<CiDollar size={35} />}
+                            icon={<CiDollar size={35} className="text-primary-dark" />}
                         />          
                         <NewOverviewCard 
                             title={"Tickets sold"} 
                             amount={organiserStats?.ongoingTicketSales || 0} 
                             description={"upcoming"}
-                            icon={<IoTicketOutline size={30} />}
+                            icon={<IoTicketOutline size={30} className="text-primary-dark" />}
                         />
-                        <OverviewCard title={"active tickets"} amount={organiserStats?.activeTickets || 0} />
-                        {viewMore && <OverviewCard title={"all time events"} amount={organiserStats?.allTimeEvents || 0} />}
+                        <NewOverviewCard 
+                            title={"Upcoming Events"} 
+                            amount={organiserActiveEvents.length || 0} 
+                            description={"active"}
+                            icon={<BsCalendar2Check size={30} className="text-primary-dark" />}
+                        />
+                        <NewOverviewCard 
+                            title={"all time events"} 
+                            amount={organiserStats?.allTimeEvents || 0}
+                        />
                         {viewMore && <OverviewCard title={"all time ticket sales"} amount={organiserStats?.allTimeTicketSales || 0} />}
                         {viewMore && <OverviewCard title={"all time sales"} isCurrencyCard={true} amount={organiserStats?.allTimeSales.toLocaleString() || 0} />}          
                     </div>
-                    <div className="flex gap-3">
-                        <div className="text-primary-orange bg-primary-dark px-4 py-2 rounded-full text-center">
-                            Create New Event
+                    {/* <div className="bg-white my-4 p-4 rounded-[20px]">
+                        <div className="flex gap-3 overflow-x-scroll rounded-[20px]">
+                        {
+                            actionArray.map((action)=>(
+                                <div className={` ${action.bgDark ? "text-primary-orange bg-primary-dark" : "text-primary-dark"} whitespace-nowrap border-[1px] border-primary-dark px-4 py-2 rounded-full text-center`}>
+                                    {action.text}
+                                </div>
+                            ))
+                        }
                         </div>
-                    </div>
-                    <div className="flex justify-end text-primary-dark font-medium pt-4 underline text-right">
+                    </div> */}
+                    {/* <div className="flex justify-end text-primary-dark font-medium pt-4 underline text-right">
                         <div 
                             onClick={()=>{
                                 setViewMore((prev)=>(!prev))
@@ -108,7 +141,7 @@ export default function OrganiserDashboard(){
                                 "View More"
                             }
                         </div>
-                    </div>
+                    </div> */}
                     <div>
                         <div className="flex justify-between items-center pt-12 pb-8">
                             <h2 className="text-xl font-bold text-primary-dark">Your Events</h2>

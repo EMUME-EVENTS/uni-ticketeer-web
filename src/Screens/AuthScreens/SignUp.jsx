@@ -205,6 +205,7 @@ export default function SignUp(){
                             required
                             type={"text"}
                             name={"fullname"}
+                            description={"Ensure to enter the name on your intended withdrawal bank account"}
                             value={signupData.fullname}
                             onChange={handleFormDataChange}
                         />

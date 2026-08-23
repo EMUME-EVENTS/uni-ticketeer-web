@@ -35,7 +35,7 @@ export default function Cart(){
     async function onCheckoutCart(){
         let callback_url = `${window.location.protocol}//${window.location.host}/verifypayment`
         console.log("url", callback_url)
-        let res = await checkoutCart({cart_items: cart, callback_url})
+        let res = await checkoutCart({callback_url})
         if(res.success){
             console.log("link to redirect to", res.link)
             window.location.replace(res.link)
@@ -49,7 +49,7 @@ export default function Cart(){
             <DashHeader title={'Cart'} dashnavtoggle={toggleMenu} />
             <div className="md:flex justify-between text-primary-dark gap-4">
                 <div className="bg-white p-4 w-full md:w-[75%] rounded-[10px]">
-                    <h3 className='font-bold text-lg'>{`Cart(${cart?.length})`}</h3>
+                    <h3 className='font-bold text-lg'>{`Cart(${cart?.length || 0})`}</h3>
                     <Line />
                     {
                         cartLoading

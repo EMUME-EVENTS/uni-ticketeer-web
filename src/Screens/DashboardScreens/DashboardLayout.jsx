@@ -43,12 +43,16 @@ export default function DashboardLayout(){
                                     </Link>
                                 </DashNavLinkCont>
                             }
-                            <DashNavLinkCont toggleMenu={toggleMenu} active={location.pathname === '/dashboard/events' ? true : false} >
-                                <IoCalendarOutline size={25} />
-                                <Link to={"/dashboard/events"} className="ml-2 cursor-pointer">
-                                    Events
-                                </Link>
-                            </DashNavLinkCont>
+                            {
+                                isUserBasic(userProvider?.user)
+                                &&
+                                <DashNavLinkCont toggleMenu={toggleMenu} active={location.pathname === '/dashboard/events' ? true : false} >
+                                    <IoCalendarOutline size={25} />
+                                    <Link to={"/dashboard/events"} className="ml-2 cursor-pointer">
+                                        Events
+                                    </Link>
+                                </DashNavLinkCont>
+                            }
                             {
                                 isUserBasic(userProvider?.user)
                                 &&

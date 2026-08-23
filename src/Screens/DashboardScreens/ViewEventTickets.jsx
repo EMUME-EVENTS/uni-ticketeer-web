@@ -41,7 +41,7 @@ export default function ViewEventTickets(){
         for(let i=0; i < ticketsToBuy.length; i++){
             console.log("item being added to cart", ticketsToBuy[i])
             if(ticketsToBuy[i].quantity > 0){
-                let result = await addTicketToCart(ticketsToBuy[i].ticket_info._id, ticketsToBuy[i])
+                let result = await addTicketToCart(ticketsToBuy[i].ticket_info._id, {quantity: ticketsToBuy[i].quantity})
                 if(!result.success){
                     setAddToCartLoading(false)
                     return

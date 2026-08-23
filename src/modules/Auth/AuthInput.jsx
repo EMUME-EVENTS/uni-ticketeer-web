@@ -2,7 +2,7 @@ import { useState } from "react";
 import { LuEyeClosed } from "react-icons/lu";
 
 
-export function AuthInput({label, type, inputtype, required, placeholder, name, value, options, onChange}){
+export function AuthInput({label, type, inputtype, required, placeholder, description, name, value, options, onChange}){
 
     let [passType, setPassType] = useState('password')
 
@@ -27,6 +27,9 @@ export function AuthInput({label, type, inputtype, required, placeholder, name, 
                     {type === "password" && <LuEyeClosed onClick={togglePass} />}
                 </div>
             }
+            {description && <div className="text-[#CCCCCC] text-[12px]">
+                <span>&#9432;</span> {description}
+            </div>}
         </div>
     )
 }
