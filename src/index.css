@@ -7,6 +7,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.modals {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+@media screen and (width <= 768px) {
+  .modalContainer {
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    margin: 0;
+  }
+
+  .modals {
+    margin: 0;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

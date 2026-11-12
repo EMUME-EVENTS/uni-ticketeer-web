@@ -45,6 +45,8 @@ export default function OrganiserDashboard(){
     let [needTicketModalOpen, setNeedTicketModalOpen] = useState(false)
     let [eventNeedingTickets, setEventNeedingTickets] = useState("")
 
+    let [showCreateEventModal, setShowCreateEventModal] = useState(false)
+
     useEffect(()=>{
         if(events && events.length > 0){
             console.log("events from organiser dashboard", events)
@@ -145,12 +147,16 @@ export default function OrganiserDashboard(){
                     <div>
                         <div className="flex justify-between items-center pt-12 pb-8">
                             <h2 className="text-xl font-bold text-primary-dark">Your Events</h2>
-                            <Link to={"/dashboard/event/create"}>
-                                <div className="flex text-primary-dark items-center bg-primary-orange p-2 mr-8 rounded-full font-medium"> 
-                                    New Event 
-                                    <IoAdd size={20} className=" cursor-pointer"/>
-                                </div>
-                            </Link>
+                            
+                            <div 
+                                onClick={()=>{
+                                    setShowCreateEventModal(true)
+                                }} 
+                                className="flex cursor-pointer text-primary-dark items-center bg-primary-orange p-2 mr-8 rounded-full font-medium"
+                            > 
+                                New Event 
+                                <IoAdd size={20} className=" cursor-pointer"/>
+                            </div>
                         </div>
                         {
                             eventsLoading
@@ -192,6 +198,38 @@ export default function OrganiserDashboard(){
                             </div>
                         }
                     </div>
+                    {/* ticket type select modal */}
+                    <CustomModal
+                        isOpen={showCreateEventModal}
+                        closeModal={()=>{
+                            setShowCreateEventModal(false)
+                        }}
+                    >
+                        <div>
+                            <h2 className="text-primary-dark py-4 text-center text-[24px] font-semibold">Event Type</h2>
+                            <div className="w-full flex flex-col gap-[20px] md:flex-row  justify-around">
+                                <Link 
+                                    to={"/dashboard/event/create?type=free"}
+                                    className="flex text-primary-dark flex-col items-center justify-center md:w-[45%] h-[196px] md:h-[300px] rounded-md text-center shadow-sm hover:shadow-md md:px-6 cursor-pointer"
+                                >
+                                    <h3 className="text-[20px]">Free Event</h3>
+                                    <p className="text-[14px] font-regular">Open to Everyone. No ticket purchase required</p>
+                                </Link>
+
+                                
+                                <Link 
+                                    to={"/dashboard/event/create?type=paid"}
+                                    className="flex text-primary-dark flex-col items-center justify-center md:w-[45%] h-[196px] md:h-[300px] rounded-md text-center shadow-sm hover:shadow-md md:px-6 cursor-pointer"
+                                >
+                                    <h3 className="text-[20px]">Paid Event</h3>
+                                    <p className="text-[14px] font-regular">
+                                        Create and sell ticket to your events and manage registrations with ease
+                                    </p>
+                                </Link>
+                            </div>
+                        </div>
+                    </CustomModal>
+                    {/* ticket check modal */}
                     <CustomModal 
                         isOpen={needTicketModalOpen} 
                         closeModal={()=> {}}

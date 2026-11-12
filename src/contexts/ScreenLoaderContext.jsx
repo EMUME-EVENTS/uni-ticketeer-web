@@ -14,6 +14,7 @@ export function ScreenLoaderProvider({children}){
                 isOpen={isLoading}
                 closeModal={()=>{}}
                 showCloseBtn={false}
+                isLoadingModal={true}
             >
                 <div className="md:w-[500px] w-[100%]">
                     <CustomLoader />

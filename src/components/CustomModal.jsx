@@ -1,7 +1,14 @@
 import "react-responsive-modal/styles.css"
 import { Modal } from "react-responsive-modal"
 
-export default function CustomModal({isOpen, showCloseBtn, shouldCloseOnOverlayClick, closeModal, children}){
+export default function CustomModal({
+    isOpen, 
+    showCloseBtn, 
+    shouldCloseOnOverlayClick, 
+    closeModal, 
+    children,
+    isLoadingModal
+}){
     return(
         <div>
             <Modal 
@@ -11,8 +18,12 @@ export default function CustomModal({isOpen, showCloseBtn, shouldCloseOnOverlayC
                 center
                 styles={{
                     modal: {
-                        borderRadius: 15
+                        margin: 0
                     }
+                }}
+                classNames={{
+                    modalContainer: !isLoadingModal && 'modalContainer',
+                    modal: 'modals'
                 }}
             >
                 <div className="pt-6 pb-6">

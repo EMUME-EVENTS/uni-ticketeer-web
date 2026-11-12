@@ -20,23 +20,27 @@ import { toast } from "react-toastify";
 import { useEventProvider } from "../../contexts/EventContext";
 import CustomModal from "../../components/CustomModal";
 import CustomLoader from "../../components/CustomLoader";
+import ToggleSwitch from "../../components/ToggleSwitch";
 
 
 
-export default function AddEventGeneralInfo({moveToTickets, event}){
+export default function AddEventGeneralInfo({moveToTickets, event, ticketed}){
     let navigate = useNavigate()
     let userProvider = useUserProvider()
     let nextDay = dayjs().add(1, "day").format("YYYY-MM-DD")
     let today = dayjs()
     const {isImageLoading, imageStatus, uploadImage} = useImage()
     let { createEvent, editEvent, eventsLoading, eventsStatus } = useEventProvider()
-    let [isTicketed, setIsTicketed] = useState(false)
+    let [isTicketed, setIsTicketed] = useState(ticketed || false)
     let [bannerImg, setBannerImg] = useState({blob: "", isUploaded: false})
     let [statesArr, setStatesArr] = useState([])
     let [citiesArr, setCitiesArr] = useState([])
     let [state, setState] = useState("")
     let [city, setCity] = useState("")
+    let [isLocationPrivate, setIsLocationPrivate] = useState(false)
+    let [isEventOnline, setIsEventOnline] = useState(false)
     let [landmark, setLandmark] = useState("")
+    let [onlineLink, setOnlineLink] = useState("")
     let [createEventFormData, setCreateEventFormData] = useState(
         {
             title: "",
@@ -90,11 +94,13 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
         let eventData = {
             ...createEventFormData, 
             is_ticketed: isTicketed,
-            status: event ? undefined : isTicketed ? 'draft' : 'published',
+            status: 'draft',
             location: {
                 country: userProvider?.user?.location?.country,
                 state,
                 city,
+                isPrivate: isLocationPrivate,
+                onlineLink: isEventOnline ? 
                 landmark: landmark || undefined
             }
         }
@@ -178,7 +184,8 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
     })
 
     return(
-        <form onSubmit={handleSubmitEvent} className="md:w-[70%] py-4 m-auto">
+        <form onSubmit={handleSubmitEvent} >
+                    <p className="text-primary-dark text-[18px] md:text-[24px]">Event Details</p>
                     <div>
                         <Title title={"Event name *"} />
                         <TicketInput 
@@ -188,6 +195,72 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                             name={"title"} 
                             onChange={handleCreateEventChange} 
                             placeholder={"Event name"} 
+                        />
+                    </div>
+                    <div>
+                        <Title title={"Upload Image"} />
+                        <div className="w-full m-auto border border-primary-dark/50 flex flex-col justify-center items-center p-6 rounded-lg">
+                            {
+                                bannerImg.blob !== ""
+                                ?
+                                <label htmlFor="event_banner">
+                                    <img src={URL.createObjectURL(bannerImg.blob)} alt="banner" className="w-[70%] m-auto" />
+                                </label>
+                                :
+                                <label htmlFor="event_banner" className="cursor-pointer flex flex-col items-center w-full">
+                                    {
+                                        createEventFormData.banner_image_url
+                                        ?
+                                        <img src={createEventFormData.banner_image_url} alt="banner" className="w-[70%] m-auto" />
+                                        :
+                                        <AiOutlinePicture size={60} fontWeight={2} color="#3F1860" />
+                                    }
+                                    <p className="text-[18px] text-center text-primary-dark">Upload cover</p>
+                                </label>
+                            }
+                            <input 
+                                type="file" 
+                                id="event_banner" 
+                                accept="image/*" 
+                                hidden={true}
+                                onInput={(e)=>{
+                                    setBannerImg({
+                                        blob: e.target.files[0] || bannerImg.blob,
+                                        isUploaded: false
+                                    }); 
+                                    console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])
+                                }} />
+                            {
+                                bannerImg.blob
+                                && 
+                                <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] text-primary-dark cursor-pointer px-4 border border-primary-dark rounded-sm my-2 w-auto">
+                                    { 
+                                        imageStatus.error
+                                        ?
+                                        <span>{imageStatus.message}.. Try again</span>
+                                        :
+                                        isImageLoading
+                                        ?
+                                        <span>uploading image ...</span>
+                                        :
+                                        bannerImg.isUploaded
+                                        ?
+                                        <span className="text-green-500">Image has been uploaded</span>
+                                        :
+                                        <span>Upload Image</span> 
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <Title title="Description" />
+                        <TicketInput 
+                            tagType={"textarea"} 
+                            value={createEventFormData.additional_information} 
+                            placeholder={"Write details about the event"}
+                            name={"additional_information"} 
+                            onChange={handleCreateEventChange} 
                         />
                     </div>
                     <div>
@@ -234,18 +307,10 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                             </CategoryTab>
                         </div>
                     </div>
-                    <div>
-                        <Title title="Description" />
-                        <TicketInput 
-                            tagType={"textarea"} 
-                            value={createEventFormData.additional_information} 
-                            name={"additional_information"} 
-                            onChange={handleCreateEventChange} 
-                        />
-                    </div>
+                    
                     <div>
                         <Title title="Location" />
-                        <div className="flex gap-3 w-full">
+                        <div className="md:flex gap-3 w-full">
                             <TicketInput
                                 tagType={"select"}
                                 required
@@ -274,7 +339,34 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                             name={"venue"}
                             onChange={handleCreateEventChange}
                         />
-                        <div className="w-[50%] m-auto">
+                        <div className="flex justify-end">
+                            <ToggleSwitch 
+                                label="Private Location"
+                            />
+                        </div>
+                        <div className="flex justify-between items-center pt-2 text-primary-dark">
+                            <ToggleSwitch 
+                                initialState={isEventOnline} onChange={(val)=>{
+                                    console.log("link switch toggled", val)
+                                    setIsEventOnline(val)
+                                }} 
+                                label="Online Event?" 
+                            />
+                        </div>
+                        {
+                            isEventOnline
+                            &&
+                            <TicketInput 
+                                tagType="input"
+                                value={onlineLink}
+                                onChange={(e)=>{
+                                    console.log("online link", e.target.value)
+                                    setOnlineLink(e.target.value)
+                                }}
+                                placeholder={"Enter event link"}
+                            />
+                        }
+                        <div className="md:w-[50%] m-auto">
                             <TicketInput 
                                 tagType={"input"} 
                                 value={landmark}
@@ -286,7 +378,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                     </div>
                     <div>
                         <Title title={"Date and Time"} />
-                        <div className="flex gap-3">
+                        <div className="md:flex gap-3">
                             <TicketInput 
                                 tagType={"input"}
                                 required 
@@ -306,7 +398,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                                 onChange={handleCreateEventChange}
                             />
                         </div>
-                        <div className="flex gap-3">
+                        <div className="md:flex gap-3">
                             <TicketInput
                                 tagType={"input"}
                                 required
@@ -326,74 +418,11 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                             />
                         </div>
                     </div>
-                    <div>
-                        <Title title={"Upload Image"} />
-                        <div className="w-[50%] m-auto border border-primary-dark flex flex-col justify-center items-center pb-4">
-                            <div className="text-[10px] text-primary-dark">click on the banner to select an image </div>
-                            {
-                                bannerImg.blob !== ""
-                                ?
-                                <label htmlFor="event_banner">
-                                    <img src={URL.createObjectURL(bannerImg.blob)} alt="banner" className="w-[70%] m-auto" />
-                                </label>
-                                :
-                                <label htmlFor="event_banner" className="cursor-pointer border border-primary-dark">
-                                    {
-                                        createEventFormData.banner_image_url
-                                        ?
-                                        <img src={createEventFormData.banner_image_url} alt="banner" className="w-[70%] m-auto" />
-                                        :
-                                        <AiOutlinePicture size={150} fontWeight={2} />
-                                    }
-                                    <p className="text-[12px] text-center">select image</p>
-                                </label>
-                            }
-                            <input 
-                                type="file" 
-                                id="event_banner" 
-                                accept="image/*" 
-                                hidden={true}
-                                onInput={(e)=>{
-                                    setBannerImg({
-                                        blob: e.target.files[0] || bannerImg.blob,
-                                        isUploaded: false
-                                    }); 
-                                    console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])
-                                }} />
-                            {
-                                bannerImg.blob
-                                && 
-                                <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] text-primary-dark cursor-pointer px-4 border border-primary-dark rounded-sm my-2 w-auto">
-                                    { 
-                                        imageStatus.error
-                                        ?
-                                        <span>{imageStatus.message}.. Try again</span>
-                                        :
-                                        isImageLoading
-                                        ?
-                                        <span>uploading image ...</span>
-                                        :
-                                        bannerImg.isUploaded
-                                        ?
-                                        <span className="text-green-500">Image has been uploaded</span>
-                                        :
-                                        <span>Upload Image</span> 
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div>
-                        <Title title="Ticket" />
-                        <div className="flex gap-3 w-[50%] m-auto">
-                            <TicketedTab priceType={"free"} isTicketed={isTicketed} setIsTicketed={setIsTicketed} />
-                            <TicketedTab priceType={"paid"} isTicketed={isTicketed} setIsTicketed={setIsTicketed} />
-                        </div>
-                    </div>
-                   
+                    
                     <div className="flex justify-center">
                         <button 
                             className={`p-2 m-4 text-center ${eventsLoading ? "bg-grey-700" : "bg-primary-dark"} text-primary-orange rounded-md`}
+                            disabled={eventsLoading}
                         >
                             {
                                 eventsLoading
@@ -404,11 +433,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                                 ?
                                 "Submit"
                                 :
-                                isTicketed
-                                ?
-                                "Submit and proceed to add tickets"
-                                :
-                                "Create Event (Without tickets)"
+                                "Continue"
                             }
                         </button>
                     </div>
@@ -454,7 +479,7 @@ function CategoryTab({value, category, children, onChange}){
     return(
         <div className="w-[72px]">
             <label htmlFor={category} >
-                <div className={`flex items-center justify-center ${isChecked && "bg-gray-500"} border-[2px] border-primary-dark rounded-md p-2 h-[70px]`}>
+                <div className={`flex items-center justify-center ${isChecked && "bg-gray-500"} border-[2px] border-primary-dark rounded-md p-2 h-[70px] text-primary-dark`}>
                     {children}
                 </div>
                 <p className="text-center text-[10px] font-medium text-primary-dark">{category}</p>
@@ -466,24 +491,24 @@ function CategoryTab({value, category, children, onChange}){
 
 function Title({title}){
     return(
-        <h3 className="text-primary-dark text-center my-4 font-medium text-lg">{title}</h3>
+        <h3 className="text-primary-dark my-4 font-medium text-[16px] md:text-[20px]">{title}</h3>
     )
 }
 
-function TicketedTab({priceType, isTicketed, setIsTicketed}){
-    let [selected, setSelected] = useState("")
+// function TicketedTab({priceType, isTicketed, setIsTicketed}){
+//     let [selected, setSelected] = useState("")
 
-    function toggleIsTicketed(){
-        setIsTicketed(priceType === "free" ? false : true)
-    }
+//     function toggleIsTicketed(){
+//         setIsTicketed(priceType === "free" ? false : true)
+//     }
 
-    useEffect(()=>{
-        setSelected(isTicketed ? "paid" : "free")
-    }, [isTicketed])
+//     useEffect(()=>{
+//         setSelected(isTicketed ? "paid" : "free")
+//     }, [isTicketed])
 
-    return (
-        <div onClick={toggleIsTicketed} className={`w-full text-center cursor-pointer ${priceType === selected ? "bg-primary-dark" : "bg-[#F7F7F7]"} text-primary-orange`}> 
-            {priceType}
-        </div> 
-    )
-}
+//     return (
+//         <div onClick={toggleIsTicketed} className={`w-full text-center cursor-pointer ${priceType === selected ? "bg-primary-dark" : "bg-[#F7F7F7]"} text-primary-orange`}> 
+//             {priceType}
+//         </div> 
+//     )
+// }
