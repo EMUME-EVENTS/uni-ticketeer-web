@@ -6,6 +6,7 @@ import ReviewEventInfo from "../../modules/Events/ReviewEventInfo"
 import {ToastContainer, toast} from "react-toastify"
 import { InfoTab } from "../../modules/Events/InfoTab"
 import StepsComponent from "../../components/StepsComponent"
+import { IoChevronBack } from "react-icons/io5"
 
 
 export default function CreateEvent(){
@@ -39,6 +40,14 @@ export default function CreateEvent(){
                     <InfoTab info={"General Info"} currentTab={currentTab || "general"} />
                     <InfoTab info={"Ticket Info"} currentTab={currentTab} />
                 </div> */}
+                <div className="text-primary-dark flex items-center gap-2">
+                    <div onClick={()=> navigate(-1)}>
+                        <IoChevronBack />
+                    </div>
+                    <p>
+                        Create Event
+                    </p>
+                </div>
                 <div className="bg-white md:w-[90%] p-4 m-auto my-4 rounded-[20px]">
                     <StepsComponent
                         steps={steps}
@@ -49,12 +58,20 @@ export default function CreateEvent(){
                     {
                         !currentTab
                         &&
-                        <AddEventGeneralInfo moveToTickets={moveToNextTab} ticketed={type == "free" ? false : type == "paid" ? true : undefined} /> 
+                        <AddEventGeneralInfo 
+                            moveToNext={moveToNextTab} 
+                            ticketed={type == "free" ? false : type == "paid" ? true : undefined} 
+                            nextTab={"Partners"}
+                        /> 
                     }
                     { 
                         currentTab == "Tickets & Pricing"
                         &&
-                        <AddEventTicketInfo eventId={eventId} eventName={eventName} organiserId={organiserId} />
+                        <AddEventTicketInfo 
+                            eventId={eventId} 
+                            eventName={eventName} 
+                            organiserId={organiserId} 
+                        />
                     }
                     {
                         currentTab == "Review"

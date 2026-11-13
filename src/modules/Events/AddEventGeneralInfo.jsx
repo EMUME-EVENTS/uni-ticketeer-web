@@ -24,7 +24,7 @@ import ToggleSwitch from "../../components/ToggleSwitch";
 
 
 
-export default function AddEventGeneralInfo({moveToTickets, event, ticketed}){
+export default function AddEventGeneralInfo({moveToNext, event, ticketed, nextTab}){
     let navigate = useNavigate()
     let userProvider = useUserProvider()
     let nextDay = dayjs().add(1, "day").format("YYYY-MM-DD")
@@ -110,11 +110,8 @@ export default function AddEventGeneralInfo({moveToTickets, event, ticketed}){
             result = await createEvent(eventData)
             if(!result.success) return;
             toast.success("Event Created Successfully", {position: 'top-center'})
-            if(eventData.is_ticketed){
-                moveToTickets(result.eventId, eventData.title, eventData.organiser)
-            }else{
-                navigate("/dashboard")
-            }
+
+            moveToNext(result.eventId, eventData.title, eventData.organiser, nextTab)
         }else{
             result = await editEvent(event._id, eventData)
             if(!result.success) return;

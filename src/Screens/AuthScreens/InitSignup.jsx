@@ -79,7 +79,7 @@ export default function InitSignup(){
                 >
                     {
                         signupDetails.map((det, i)=>(
-                            <SwiperSlide>
+                            <SwiperSlide key={"swiper"+i}>
                                 <SelectRoleCard
                                     details={det}
                                     currentRole={userRole}
@@ -91,7 +91,7 @@ export default function InitSignup(){
                 </CustomSliderContainer>
             </div>
             <Section>
-                <Link to={`/auth/signup?role=${userRole}`}>
+                <Link to={userRole && `/auth/signup?role=${userRole}`}>
                     <div className="flex justify-end">
                         <div className={`${userRole ? "bg-white text-primary-dark": "bg-[#CCCCCC] text-[#EEEEEE]"} px-6 py-4 mb-2 rounded-full`}>
                             Continue
@@ -134,7 +134,7 @@ function SelectRoleCard({details, currentRole, onChangeRole}){
                     <ul>
                         {
                             details.points.map((p, i)=>(
-                                <li style={{listStyle: "circle"}} className="font-light text-[14px] md:text-[16px] ">{p}</li>
+                                <li key={"list"+i} style={{listStyle: "circle"}} className="font-light text-[14px] md:text-[16px] ">{p}</li>
                             ))
                         }   
                     </ul>

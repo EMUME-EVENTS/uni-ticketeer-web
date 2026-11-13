@@ -1,10 +1,11 @@
 import { IoCartOutline, IoMenu, IoNotificationsOutline, IoPersonOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserProvider } from "../contexts/UserContext";
 import useCart from "../hooks/useCart";
 import { useCartProvider } from "../contexts/CartContext";
 import { isUserBasic } from "../global/helpers";
 import { useState } from "react";
+import { Images } from "../images";
 
 export default function DashHeader({title, dashnavtoggle}){
     let navigate = useNavigate()
@@ -22,8 +23,10 @@ export default function DashHeader({title, dashnavtoggle}){
     })
 
     return(
-        <div className={`w-full flex justify-between items-center py-4 w-full ${stickHeader && "fixed md:relative left-0 z-40 bg-[#EEE] px-2 shadow-[0_4px_8px_0_rgba(0,0,0,0.15)]"}`}>
-            <h3 className="text-2xl font-bold text-primary-dark">{title}</h3>
+        <div className={`bg-white md:bg-transparent rounded-lg flex justify-between items-center p-2 m-auto my-2 w-full ${stickHeader && "sticky top-2 z-50 md:relative shadow-[0_4px_8px_0_rgba(0,0,0,0.15)]"}`}>
+            <Link to={"/"}>
+                <img src={Images.newLogo} alt="emume-logo" className="md:hidden w-[33px] lg:w-[150px] p-[0px] m-[0px]"/>
+            </Link>
             <div className="flex items-center w-[auto] justify-around">
                 {
                     isUserBasic(userProvider?.user)
@@ -36,18 +39,18 @@ export default function DashHeader({title, dashnavtoggle}){
                                 {cartProvider?.cart?.length}
                             </div>
                         }
-                        <IoCartOutline className="cursor-pointer" size={25} />
+                        <IoCartOutline className="cursor-pointer text-primary-dark" size={25} />
                     </div>
                 }
                 <div className="mx-2 p-2">
-                    <IoNotificationsOutline className=" cursor-pointer" size={25} />
+                    <IoNotificationsOutline className=" cursor-pointer text-primary-dark" size={25} />
                 </div>
                 
                 <div className="w-[40px] h-[40px] bg-[#CCC] border-[1px] justify-center items-center hidden md:flex rounded-full">
                     <IoPersonOutline size={25} />
                 </div>
                 <div onClick={dashnavtoggle} className="w-[40px] h-[40px] md:hidden flex items-center p-2">
-                    <IoMenu className=" cursor-pointer" size={25} />
+                    <IoMenu className=" cursor-pointer text-primary-dark" size={25} />
                 </div>
             </div>
         </div>

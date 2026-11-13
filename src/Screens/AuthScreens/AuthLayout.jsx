@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import useLogin from "../../hooks/useLogin"
 import { ToastContainer } from "react-toastify"
 import { Images } from "../../images"
+import { IoChevronBack } from "react-icons/io5"
 
 
 export default function AuthLayout(){
@@ -21,6 +22,12 @@ export default function AuthLayout(){
     return(
         <>
             <div className="relative md:flex h-[100vh] overflow-hidden" style={{backgroundImage: `url(${Images.signupSideImg})`, backgroundSize: "contain"}}>
+                {/* mobile back button */}
+                <div className="md:hidden bg-white w-[32px] h-[32px] rounded-full flex justify-center items-center m-4">
+                    <Link to={"/"}>
+                        <IoChevronBack />
+                    </Link>
+                </div>
                 <div className="w-[25%] hidden md:flex flex-col justify-center items-center h-[100vh] bg-transparent fixed">
                     <div className="text-white text-xl absolute top-10 left-10 font-bold cursor-pointer"><Link to={"/"}><img src={Images.logoGray} className="w-[50px]" /></Link></div>
                     <h1 className="text-4xl text-white font-bold">Emume</h1>
